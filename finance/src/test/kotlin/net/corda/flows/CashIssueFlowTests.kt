@@ -3,7 +3,6 @@ package net.corda.flows
 import net.corda.contracts.asset.Cash
 import net.corda.core.contracts.DOLLARS
 import net.corda.core.contracts.`issued by`
-import net.corda.core.flows.TxKeyFlow
 import net.corda.core.getOrThrow
 import net.corda.core.identity.Party
 import net.corda.core.serialization.OpaqueBytes
@@ -48,7 +47,7 @@ class CashIssueFlowTests {
                 bankOfCorda,
                 notary)).resultFuture
         mockNet.runNetwork()
-        val issueTx = future.getOrThrow()
+        val issueTx = future.getOrThrow().first
         val output = issueTx.tx.outputs.single().data as Cash.State
         assertEquals(expected.`issued by`(bankOfCorda.ref(ref)), output.amount)
     }
