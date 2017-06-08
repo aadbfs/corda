@@ -26,7 +26,7 @@ class DummyDealContract : Contract {
             override val participants: List<AbstractParty> = listOf(),
             override val linearId: UniqueIdentifier = UniqueIdentifier(),
             override val ref: String,
-            override val parties: List<AnonymousParty> = listOf()) : DealState, QueryableState {
+            override val parties: List<AbstractParty> = listOf()) : DealState, QueryableState {
 
         override fun isRelevant(ourKeys: Set<PublicKey>): Boolean {
             return true
