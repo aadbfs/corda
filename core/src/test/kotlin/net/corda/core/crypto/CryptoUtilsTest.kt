@@ -642,9 +642,9 @@ class CryptoUtilsTest {
         val keyPairEdDSA = Crypto.generateKeyPair(Crypto.EDDSA_ED25519_SHA512)
         val pubEdDSA = keyPairEdDSA.public
         assertTrue(Crypto.publicKeyOnCurve(Crypto.EDDSA_ED25519_SHA512, pubEdDSA))
-        // use R1 curve for check.
+        // Use R1 curve for check.
         assertFalse(Crypto.publicKeyOnCurve(Crypto.ECDSA_SECP256R1_SHA256, pubEdDSA))
-        // check for point at infinity.
+        // Check for point at infinity.
         val pubKeySpec = EdDSAPublicKeySpec((Crypto.EDDSA_ED25519_SHA512.algSpec as EdDSANamedCurveSpec).curve.getZero(GroupElement.Representation.P3), Crypto.EDDSA_ED25519_SHA512.algSpec as EdDSANamedCurveSpec)
         assertFalse(Crypto.publicKeyOnCurve(Crypto.EDDSA_ED25519_SHA512, EdDSAPublicKey(pubKeySpec)))
     }
@@ -654,8 +654,8 @@ class CryptoUtilsTest {
         val keyGen = KeyPairGenerator.getInstance("EC") // sun.security.ec.ECPublicKeyImpl
         keyGen.initialize(256, newSecureRandom())
         val pairSun = keyGen.generateKeyPair()
-        val pubSun = pairSun.getPublic()
-        // should fail as pubSun is not a BCECPublicKey.
+        val pubSun = pairSun.public
+        // Should fail as pubSun is not a BCECPublicKey.
         Crypto.publicKeyOnCurve(Crypto.ECDSA_SECP256R1_SHA256, pubSun)
     }
 
@@ -664,7 +664,7 @@ class CryptoUtilsTest {
         val (priv, pub) = Crypto.generateKeyPair(Crypto.ECDSA_SECP256R1_SHA256)
         val (dpriv, dpub) = Crypto.deterministicKeyPair(priv, "seed-1".toByteArray())
 
-        //check scheme.
+        // Check scheme.
         assertEquals(priv.algorithm, dpriv.algorithm)
         assertEquals(pub.algorithm, dpub.algorithm)
         assertTrue(dpriv is BCECPrivateKey)
@@ -674,24 +674,24 @@ class CryptoUtilsTest {
         assertEquals(Crypto.findSignatureScheme(dpriv), Crypto.ECDSA_SECP256R1_SHA256)
         assertEquals(Crypto.findSignatureScheme(dpub), Crypto.ECDSA_SECP256R1_SHA256)
 
-        // validate public key.
+        // Validate public key.
         assertTrue(Crypto.publicKeyOnCurve(Crypto.ECDSA_SECP256R1_SHA256, dpub))
 
-        // try to sign/verify.
+        // Try to sign/verify.
         val signedData = Crypto.doSign(dpriv, testBytes)
         val verification = Crypto.doVerify(dpub, signedData, testBytes)
         assertTrue(verification)
 
-        // check it is a new keyPair.
+        // Check it is a new keyPair.
         assertNotEquals(priv, dpriv)
         assertNotEquals(pub, dpub)
 
-        // a new keyPair is always generated per different seed.
+        // A new keyPair is always generated per different seed.
         val (dpriv2, dpub2) = Crypto.deterministicKeyPair(priv, "seed-2".toByteArray())
         assertNotEquals(dpriv, dpriv2)
         assertNotEquals(dpub, dpub2)
 
-        // check if the same input always produces the same output (i.e. deterministically generated).
+        // Check if the same input always produces the same output (i.e. deterministically generated).
         val (dpriv_1, dpub_1) = Crypto.deterministicKeyPair(priv, "seed-1".toByteArray())
         assertEquals(dpriv, dpriv_1)
         assertEquals(dpub, dpub_1)
@@ -705,7 +705,7 @@ class CryptoUtilsTest {
         val (priv, pub) = Crypto.generateKeyPair(Crypto.ECDSA_SECP256K1_SHA256)
         val (dpriv, dpub) = Crypto.deterministicKeyPair(priv, "seed-1".toByteArray())
 
-        //check scheme.
+        // Check scheme.
         assertEquals(priv.algorithm, dpriv.algorithm)
         assertEquals(pub.algorithm, dpub.algorithm)
         assertTrue(dpriv is BCECPrivateKey)
@@ -715,10 +715,10 @@ class CryptoUtilsTest {
         assertEquals(Crypto.findSignatureScheme(dpriv), Crypto.ECDSA_SECP256K1_SHA256)
         assertEquals(Crypto.findSignatureScheme(dpub), Crypto.ECDSA_SECP256K1_SHA256)
 
-        // validate public key.
+        // Validate public key.
         assertTrue(Crypto.publicKeyOnCurve(Crypto.ECDSA_SECP256K1_SHA256, dpub))
 
-        // try to sign/verify.
+        // Try to sign/verify.
         val signedData = Crypto.doSign(dpriv, testBytes)
         val verification = Crypto.doVerify(dpub, signedData, testBytes)
         assertTrue(verification)
@@ -727,12 +727,12 @@ class CryptoUtilsTest {
         assertNotEquals(priv, dpriv)
         assertNotEquals(pub, dpub)
 
-        // a new keyPair is always generated per different seed.
+        // A new keyPair is always generated per different seed.
         val (dpriv2, dpub2) = Crypto.deterministicKeyPair(priv, "seed-2".toByteArray())
         assertNotEquals(dpriv, dpriv2)
         assertNotEquals(dpub, dpub2)
 
-        // check if the same input always produces the same output (i.e. deterministically generated).
+        // Check if the same input always produces the same output (i.e. deterministically generated).
         val (dpriv_1, dpub_1) = Crypto.deterministicKeyPair(priv, "seed-1".toByteArray())
         assertEquals(dpriv, dpriv_1)
         assertEquals(dpub, dpub_1)
@@ -746,7 +746,7 @@ class CryptoUtilsTest {
         val (priv, pub) = Crypto.generateKeyPair(Crypto.EDDSA_ED25519_SHA512)
         val (dpriv, dpub) = Crypto.deterministicKeyPair(priv, "seed-1".toByteArray())
 
-        //check scheme.
+        // Check scheme.
         assertEquals(priv.algorithm, dpriv.algorithm)
         assertEquals(pub.algorithm, dpub.algorithm)
         assertTrue(dpriv is EdDSAPrivateKey)
@@ -756,24 +756,24 @@ class CryptoUtilsTest {
         assertEquals(Crypto.findSignatureScheme(dpriv), Crypto.EDDSA_ED25519_SHA512)
         assertEquals(Crypto.findSignatureScheme(dpub), Crypto.EDDSA_ED25519_SHA512)
 
-        // validate public key.
+        // Validate public key.
         assertTrue(Crypto.publicKeyOnCurve(Crypto.EDDSA_ED25519_SHA512, dpub))
 
-        // try to sign/verify.
+        // Try to sign/verify.
         val signedData = Crypto.doSign(dpriv, testBytes)
         val verification = Crypto.doVerify(dpub, signedData, testBytes)
         assertTrue(verification)
 
-        // check it is a new keyPair.
+        // Check it is a new keyPair.
         assertNotEquals(priv, dpriv)
         assertNotEquals(pub, dpub)
 
-        // a new keyPair is always generated per different seed.
+        // A new keyPair is always generated per different seed.
         val (dpriv2, dpub2) = Crypto.deterministicKeyPair(priv, "seed-2".toByteArray())
         assertNotEquals(dpriv, dpriv2)
         assertNotEquals(dpub, dpub2)
 
-        // check if the same input always produces the same output (i.e. deterministically generated).
+        // Check if the same input always produces the same output (i.e. deterministically generated).
         val (dpriv_1, dpub_1) = Crypto.deterministicKeyPair(priv, "seed-1".toByteArray())
         assertEquals(dpriv, dpriv_1)
         assertEquals(dpub, dpub_1)
